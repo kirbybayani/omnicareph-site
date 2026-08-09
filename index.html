@@ -289,6 +289,26 @@
   .loc-chip.live i{background:#2fbf71}
   .loc-chip.build i{background:var(--sky)}
 
+  /* ---------- Inquiry form ---------- */
+  .inquiry-card{
+    background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:46px;margin-bottom:24px;
+    display:grid;grid-template-columns:1fr 1.35fr;gap:44px;align-items:start;
+  }
+  .f-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+  .f-grid label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700;color:var(--ink)}
+  .f-grid input,.f-grid select,.f-grid textarea{
+    border:1px solid var(--line);border-radius:12px;padding:12px 14px;
+    font:inherit;font-size:14.5px;color:var(--ink);background:var(--bg-tint);
+    outline:none;transition:border-color .2s, box-shadow .2s, background .2s;
+  }
+  .f-grid input:focus,.f-grid select:focus,.f-grid textarea:focus{
+    border-color:var(--sky);background:#fff;box-shadow:0 0 0 3px var(--sky-soft);
+  }
+  .f-grid textarea{resize:vertical}
+  .f-full{grid-column:1/-1}
+  .f-note{font-size:12.5px;color:var(--gray-light);margin-top:12px}
+
   /* ---------- Contact ---------- */
   .contact-card{
     margin-top:56px;border-radius:28px;overflow:hidden;
@@ -339,6 +359,8 @@
     .map-layout{grid-template-columns:1fr}
     .opp-grid{grid-template-columns:repeat(2,1fr)}
     .offer-row{grid-template-columns:1fr}
+    .inquiry-card{grid-template-columns:1fr;padding:30px 22px}
+    .f-grid{grid-template-columns:1fr}
     .contact-card{grid-template-columns:1fr;padding:40px 28px}
     section{padding:72px 20px}
   }
@@ -580,6 +602,47 @@
 
 <section id="contact">
   <div class="wrap">
+    <div class="inquiry-card reveal">
+      <div>
+        <span class="kicker">Quick Inquiry</span>
+        <h2>Tell us about your plans</h2>
+        <p class="lead">Answer this short survey and your email app opens with the message ready to send, straight to our team. We reply within one business day.</p>
+      </div>
+      <form id="leadForm">
+        <div class="f-grid">
+          <label>Full Name<input type="text" name="name" required placeholder="Juan Dela Cruz"></label>
+          <label>Email or Mobile<input type="text" name="contact" required placeholder="you@email.com or 0917 000 0000"></label>
+          <label>Planned Location<input type="text" name="location" placeholder="City / Province"></label>
+          <label>I am a/an
+            <select name="role">
+              <option>Investor</option>
+              <option>Doctor / Nephrologist</option>
+              <option>Hospital Representative</option>
+              <option>Other</option>
+            </select>
+          </label>
+          <label>Package of Interest
+            <select name="package">
+              <option>Not sure yet</option>
+              <option>Option A - Purchase of Machines and Equipment</option>
+              <option>Option B - DOH Accreditation Service</option>
+              <option>Option C - End-to-End Service with Construction</option>
+            </select>
+          </label>
+          <label>Target Timeline
+            <select name="timeline">
+              <option>Within 6 months</option>
+              <option>6 to 12 months</option>
+              <option>More than a year</option>
+              <option>Just exploring</option>
+            </select>
+          </label>
+          <label class="f-full">Message (optional)<textarea name="message" rows="3" placeholder="Anything else we should know?"></textarea></label>
+        </div>
+        <button class="btn btn-primary" type="submit">Send Inquiry</button>
+        <p class="f-note">This opens your email app with your answers ready to send to info@omnicareph.com. Prefer to talk? Call us below.</p>
+      </form>
+    </div>
     <div class="contact-card reveal">
       <div>
         <h2>Let's build your center together</h2>
@@ -641,5 +704,23 @@
     a.addEventListener('click', () => document.querySelector('.nav-links').classList.remove('open')));
 </script>
 
+<script>
+document.getElementById('leadForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var f = new FormData(this), nl = '\r\n';
+  var body = 'Hello OmniCare,' + nl + nl +
+    'I would like to inquire about setting up a dialysis center.' + nl + nl +
+    'Name: ' + f.get('name') + nl +
+    'Contact: ' + f.get('contact') + nl +
+    'Planned location: ' + (f.get('location') || 'Not specified') + nl +
+    'I am a/an: ' + f.get('role') + nl +
+    'Package of interest: ' + f.get('package') + nl +
+    'Target timeline: ' + f.get('timeline') + nl + nl +
+    (f.get('message') ? 'Message:' + nl + f.get('message') + nl + nl : '') +
+    'Sent from omnicareph.com';
+  var subject = 'Dialysis Center Inquiry - ' + f.get('name');
+  window.location.href = 'mailto:info@omnicareph.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+});
+</script>
 </body>
 </html>
