@@ -621,12 +621,11 @@
               <option>Other</option>
             </select>
           </label>
-          <label>Package of Interest
+          <label>Interested in
             <select name="package">
-              <option>Not sure yet</option>
-              <option>Option A - Purchase of Machines and Equipment</option>
-              <option>Option B - DOH Accreditation Service</option>
-              <option>Option C - End-to-End Service with Construction</option>
+              <option>Dialysis Clinic Set up</option>
+              <option>Purchase of HD Machines</option>
+              <option>Purchase of Consumables</option>
             </select>
           </label>
           <label>Target Timeline
@@ -714,7 +713,7 @@ document.getElementById('leadForm').addEventListener('submit', function(e){
     'Contact: ' + f.get('contact') + nl +
     'Planned location: ' + (f.get('location') || 'Not specified') + nl +
     'I am a/an: ' + f.get('role') + nl +
-    'Package of interest: ' + f.get('package') + nl +
+    'Interested in: ' + f.get('package') + nl +
     'Target timeline: ' + f.get('timeline') + nl + nl +
     (f.get('message') ? 'Message:' + nl + f.get('message') + nl + nl : '') +
     'Sent from omnicareph.com';
