@@ -12,6 +12,12 @@
     --blue-deep:#0b2f70;
     --sky:#38b6f0;
     --sky-soft:#e6f4fd;
+    --gold:#f2a41f;
+    --gold-deep:#d98a0b;
+    --gold-soft:#fdf3dd;
+    --green:#2fbf71;
+    --green-soft:#e3f7ec;
+    --navy:#0a2456;
     --ink:#0f1c2e;
     --gray:#5c6b7f;
     --gray-light:#8a97a8;
@@ -103,7 +109,10 @@
     display:inline-block;text-decoration:none;font-weight:600;font-size:16px;
     padding:14px 30px;border-radius:999px;transition:all .25s;
   }
-  .btn-primary{background:var(--blue);color:#fff;box-shadow:0 6px 20px rgba(18,71,165,.28)}
+  .btn-primary{
+    background:linear-gradient(135deg,var(--gold) 0%,var(--gold-deep) 100%);
+    color:#241703;box-shadow:0 6px 20px rgba(217,138,11,.35);
+  }
   .btn-primary:hover{background:var(--blue-deep);transform:translateY(-2px)}
   .btn-ghost{color:var(--blue);background:#fff;border:1.5px solid var(--line)}
   .btn-ghost:hover{border-color:var(--sky);color:var(--blue-deep);transform:translateY(-2px)}
@@ -181,6 +190,10 @@
     background:var(--sky-soft);margin-bottom:20px;
   }
   .tile .icon svg{width:26px;height:26px;stroke:var(--blue);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .tile:nth-of-type(3n) .icon{background:var(--gold-soft)}
+  .tile:nth-of-type(3n) .icon svg{stroke:var(--gold-deep)}
+  .tile:nth-of-type(3n+1) .icon{background:var(--green-soft)}
+  .tile:nth-of-type(3n+1) .icon svg{stroke:var(--green)}
   .tile h3{font-size:20px;font-weight:700;letter-spacing:-.015em;margin-bottom:8px}
   .tile p{font-size:15px;color:var(--gray)}
   .tile-feature{
@@ -203,20 +216,28 @@
   }
 
   /* ---------- Process rail ---------- */
+  section.dark{background:linear-gradient(180deg,var(--navy) 0%,#0d3480 70%,#11418f 100%)}
+  section.dark h2{color:#fff}
+  section.dark .lead{color:rgba(255,255,255,.75)}
+  section.dark .kicker{color:var(--gold)}
   .steps{margin-top:60px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
   .step{
-    background:#fff;border:1px solid var(--line);border-radius:var(--radius);
-    padding:32px;transition:transform .3s, box-shadow .3s;
+    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);
+    border-radius:var(--radius);backdrop-filter:blur(4px);
+    padding:32px;transition:transform .3s, background .3s;
   }
-  .step:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+  .step:hover{transform:translateY(-4px);background:rgba(255,255,255,.12)}
   .step .num{
-    font-size:14px;font-weight:800;color:#fff;
+    font-size:14px;font-weight:800;color:#241703;
     width:34px;height:34px;border-radius:50%;
-    background:linear-gradient(135deg,var(--blue),var(--sky));
+    background:linear-gradient(135deg,var(--gold),var(--gold-deep));
     display:flex;align-items:center;justify-content:center;margin-bottom:18px;
   }
-  .step h3{font-size:18px;font-weight:700;margin-bottom:8px;letter-spacing:-.01em}
-  .step p{font-size:14.5px;color:var(--gray)}
+  .step h3{font-size:18px;font-weight:700;margin-bottom:8px;letter-spacing:-.01em;color:#fff}
+  .step p{font-size:14.5px;color:rgba(255,255,255,.72)}
+  section.dark .lease-note{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.16)}
+  section.dark .lease-note p{color:rgba(255,255,255,.85)}
+  section.dark .lease-note svg{stroke:var(--gold)}
   .lease-note{
     margin-top:22px;background:var(--sky-soft);border:1px solid #cfe9fa;
     border-radius:var(--radius-sm);padding:22px 28px;
@@ -237,6 +258,7 @@
     background:linear-gradient(120deg,var(--blue),var(--sky));
     -webkit-background-clip:text;background-clip:text;color:transparent;
   }
+  .opp-card:nth-of-type(even) b{background:linear-gradient(120deg,var(--gold-deep),var(--gold));-webkit-background-clip:text;background-clip:text}
   .opp-card p{font-size:14px;color:var(--gray)}
   .offer-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px}
   .offer{
@@ -289,6 +311,38 @@
   .loc-chip.live i{background:#2fbf71}
   .loc-chip.build i{background:var(--sky)}
 
+  /* ---------- Facility tape gallery ---------- */
+  .gal-head{margin-top:70px}
+  .tape{
+    position:relative;margin-top:48px;overflow:hidden;
+    width:100vw;margin-left:calc(50% - 50vw);
+  }
+  .tape::before,.tape::after{
+    content:"";position:absolute;top:0;bottom:0;width:70px;z-index:2;pointer-events:none;
+  }
+  .tape::before{left:0;background:linear-gradient(90deg,rgba(255,255,255,.55) 0%,transparent 100%)}
+  .tape::after{right:0;background:linear-gradient(270deg,rgba(255,255,255,.55) 0%,transparent 100%)}
+  .tape-track{display:flex;width:max-content;animation:tape-roll 70s linear infinite}
+  .tape:hover .tape-track{animation-play-state:paused}
+  @media (prefers-reduced-motion: reduce){.tape-track{animation:none}}
+  @keyframes tape-roll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .tape-item{flex-shrink:0;margin-right:0;position:relative}
+  .tape-item .ph{
+    aspect-ratio:16/11;height:min(78vh,760px);width:auto;
+    border-radius:0;
+  }
+  .ph{position:relative;border-radius:var(--radius-sm);overflow:hidden;background:var(--sky-soft)}
+  .ph img{width:100%;height:100%;object-fit:cover;display:block}
+  .ph .ph-hint{display:none}
+  .ph.missing{border:2px dashed #a9d4f0;background:linear-gradient(150deg,#eef7fd,#e2f1fb)}
+  .ph.missing img{display:none}
+  .ph.missing .ph-hint{
+    position:absolute;inset:0;display:flex;flex-direction:column;gap:8px;
+    align-items:center;justify-content:center;text-align:center;padding:10px;
+  }
+  .ph-hint svg{width:26px;height:26px;stroke:var(--sky);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .ph-hint span{font-size:11.5px;font-weight:600;color:var(--gray);word-break:break-all}
+
   /* ---------- Inquiry form ---------- */
   .inquiry-card{
     background:#fff;border:1px solid var(--line);border-radius:var(--radius);
@@ -330,17 +384,25 @@
   .contact-item a:hover{text-decoration:underline}
 
   /* ---------- Footer ---------- */
-  footer{padding:44px 24px;border-top:1px solid var(--line);background:var(--bg-tint)}
+  footer{padding:44px 24px;background:var(--navy)}
+  footer .brand-name{color:#fff}
+  footer .brand-name span{color:var(--sky)}
   .foot{
     max-width:1120px;margin:0 auto;display:flex;justify-content:space-between;
     align-items:center;gap:18px;flex-wrap:wrap;
   }
   .foot .brand .logo-img{height:28px}
-  .foot p{font-size:13px;color:var(--gray-light)}
+  .foot p{font-size:13px;color:rgba(255,255,255,.55)}
 
   /* ---------- Reveal ---------- */
-  .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease, transform .7s ease}
+  .reveal{
+    opacity:0;transform:translateY(34px);
+    transition:opacity 1.1s cubic-bezier(.16,1,.3,1), transform 1.1s cubic-bezier(.16,1,.3,1);
+    transition-delay:var(--stagger,0s);
+    will-change:opacity,transform;
+  }
   .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion: reduce){.reveal{transition:none;opacity:1;transform:none}}
 
   /* ---------- Responsive ---------- */
   @media (max-width:860px){
@@ -361,10 +423,24 @@
     .offer-row{grid-template-columns:1fr}
     .inquiry-card{grid-template-columns:1fr;padding:30px 22px}
     .f-grid{grid-template-columns:1fr}
+    .tape-item .ph{height:48vh}
     .contact-card{grid-template-columns:1fr;padding:40px 28px}
     section{padding:72px 20px}
   }
 </style>
+<script>
+/* Google Analytics: counts only real visits on omnicareph.com, never local previews */
+if (location.hostname === 'omnicareph.com' || location.hostname === 'www.omnicareph.com') {
+  var gaS = document.createElement('script');
+  gaS.async = true;
+  gaS.src = 'https://www.googletagmanager.com/gtag/js?id=G-8SPYEK9H4W';
+  document.head.appendChild(gaS);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function(){ dataLayer.push(arguments); };
+  gtag('js', new Date());
+  gtag('config', 'G-8SPYEK9H4W');
+}
+</script>
 </head>
 <body>
 
@@ -391,7 +467,7 @@
 <header class="hero" id="top">
   <div class="hero-badges">
     <div class="hero-badge fda"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>FDA-Licensed</div>
-    <div class="hero-badge"><span class="dot"></span>Complete turnkey dialysis center solutions</div>
+    <div class="hero-badge"><span class="dot" style="background:var(--gold)"></span>Complete turnkey dialysis center solutions</div>
   </div>
   <h1>Your partner in <span class="grad">quality healthcare</span></h1>
   <p>OmniCare Medical Supplies builds complete turnkey hemodialysis centers, from feasibility study to full operations, and supplies the equipment that keeps them running.</p>
@@ -406,6 +482,7 @@
     <div class="stat"><b data-count="5">0</b><span>Projects Underway</span></div>
   </div>
 </header>
+
 
 
 
@@ -444,7 +521,7 @@
   </div>
 </section>
 
-<section id="process" class="tinted">
+<section id="process" class="dark">
   <div class="wrap center reveal">
     <span class="kicker">Our Turnkey Solution</span>
     <h2>From empty space to operational center</h2>
@@ -598,6 +675,16 @@
       </div>
     </div>
   </div>
+  <div class="wrap center reveal gal-head">
+    <h2>Inside the centers</h2>
+    <p class="lead">A look at operating client facilities designed, built, and equipped by OmniCare.</p>
+  </div>
+  <div class="tape reveal">
+    <div class="tape-track">
+      <div style="display:flex"><div class="tape-item"><div class="ph"><img src="omnicare-photos/tape-01.jpg" alt="Inside a client dialysis center built by OmniCare" loading="lazy" onerror="this.parentNode.classList.add('missing')"><div class="ph-hint"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 8z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>omnicare-photos/tape-01.jpg</span></div></div></div><div class="tape-item"><div class="ph"><img src="omnicare-photos/tape-02.jpg" alt="Inside a client dialysis center built by OmniCare" loading="lazy" onerror="this.parentNode.classList.add('missing')"><div class="ph-hint"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 8z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>omnicare-photos/tape-02.jpg</span></div></div></div><div class="tape-item"><div class="ph"><img src="omnicare-photos/tape-03.jpg" alt="Inside a client dialysis center built by OmniCare" loading="lazy" onerror="this.parentNode.classList.add('missing')"><div class="ph-hint"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 8z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>omnicare-photos/tape-03.jpg</span></div></div></div><div class="tape-item"><div class="ph"><img src="omnicare-photos/tape-04.jpg" alt="Inside a client dialysis center built by OmniCare" loading="lazy" onerror="this.parentNode.classList.add('missing')"><div class="ph-hint"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 8z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>omnicare-photos/tape-04.jpg</span></div></div></div><div class="tape-item"><div class="ph"><img src="omnicare-photos/tape-05.jpg" alt="Inside a client dialysis center built by OmniCare" loading="lazy" onerror="this.parentNode.classList.add('missing')"><div class="ph-hint"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 8z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>omnicare-photos/tape-05.jpg</span></div></div></div><div class="tape-item"><div class="ph"><img src="omnicare-photos/tape-06.jpg" alt="Inside a client dialysis center built by OmniCare" loading="lazy" onerror="this.parentNode.classList.add('missing')"><div class="ph-hint"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 8z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>omnicare-photos/tape-06.jpg</span></div></div></div><div class="tape-item"><div class="ph"><img src="omnicare-photos/tape-07.jpg" alt="Inside a client dialysis center built by OmniCare" loading="lazy" onerror="this.parentNode.classList.add('missing')"><div class="ph-hint"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 8z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>omnicare-photos/tape-07.jpg</span></div></div></div><div class="tape-item"><div class="ph"><img src="omnicare-photos/tape-08.jpg" alt="Inside a client dialysis center built by OmniCare" loading="lazy" onerror="this.parentNode.classList.add('missing')"><div class="ph-hint"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 8z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>omnicare-photos/tape-08.jpg</span></div></div></div><div class="tape-item"><div class="ph"><img src="omnicare-photos/tape-09.jpg" alt="Inside a client dialysis center built by OmniCare" loading="lazy" onerror="this.parentNode.classList.add('missing')"><div class="ph-hint"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 8z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>omnicare-photos/tape-09.jpg</span></div></div></div><div class="tape-item"><div class="ph"><img src="omnicare-photos/tape-10.jpg" alt="Inside a client dialysis center built by OmniCare" loading="lazy" onerror="this.parentNode.classList.add('missing')"><div class="ph-hint"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 8z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>omnicare-photos/tape-10.jpg</span></div></div></div><div class="tape-item"><div class="ph"><img src="omnicare-photos/tape-11.jpg" alt="Inside a client dialysis center built by OmniCare" loading="lazy" onerror="this.parentNode.classList.add('missing')"><div class="ph-hint"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 8z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>omnicare-photos/tape-11.jpg</span></div></div></div></div>
+      <div style="display:flex" aria-hidden="true"><div class="tape-item"><div class="ph"><img src="omnicare-photos/tape-01.jpg" alt="Inside a client dialysis center built by OmniCare" loading="lazy" onerror="this.parentNode.classList.add('missing')"><div class="ph-hint"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 8z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>omnicare-photos/tape-01.jpg</span></div></div></div><div class="tape-item"><div class="ph"><img src="omnicare-photos/tape-02.jpg" alt="Inside a client dialysis center built by OmniCare" loading="lazy" onerror="this.parentNode.classList.add('missing')"><div class="ph-hint"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 8z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>omnicare-photos/tape-02.jpg</span></div></div></div><div class="tape-item"><div class="ph"><img src="omnicare-photos/tape-03.jpg" alt="Inside a client dialysis center built by OmniCare" loading="lazy" onerror="this.parentNode.classList.add('missing')"><div class="ph-hint"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 8z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>omnicare-photos/tape-03.jpg</span></div></div></div><div class="tape-item"><div class="ph"><img src="omnicare-photos/tape-04.jpg" alt="Inside a client dialysis center built by OmniCare" loading="lazy" onerror="this.parentNode.classList.add('missing')"><div class="ph-hint"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 8z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>omnicare-photos/tape-04.jpg</span></div></div></div><div class="tape-item"><div class="ph"><img src="omnicare-photos/tape-05.jpg" alt="Inside a client dialysis center built by OmniCare" loading="lazy" onerror="this.parentNode.classList.add('missing')"><div class="ph-hint"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 8z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>omnicare-photos/tape-05.jpg</span></div></div></div><div class="tape-item"><div class="ph"><img src="omnicare-photos/tape-06.jpg" alt="Inside a client dialysis center built by OmniCare" loading="lazy" onerror="this.parentNode.classList.add('missing')"><div class="ph-hint"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 8z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>omnicare-photos/tape-06.jpg</span></div></div></div><div class="tape-item"><div class="ph"><img src="omnicare-photos/tape-07.jpg" alt="Inside a client dialysis center built by OmniCare" loading="lazy" onerror="this.parentNode.classList.add('missing')"><div class="ph-hint"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 8z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>omnicare-photos/tape-07.jpg</span></div></div></div><div class="tape-item"><div class="ph"><img src="omnicare-photos/tape-08.jpg" alt="Inside a client dialysis center built by OmniCare" loading="lazy" onerror="this.parentNode.classList.add('missing')"><div class="ph-hint"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 8z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>omnicare-photos/tape-08.jpg</span></div></div></div><div class="tape-item"><div class="ph"><img src="omnicare-photos/tape-09.jpg" alt="Inside a client dialysis center built by OmniCare" loading="lazy" onerror="this.parentNode.classList.add('missing')"><div class="ph-hint"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 8z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>omnicare-photos/tape-09.jpg</span></div></div></div><div class="tape-item"><div class="ph"><img src="omnicare-photos/tape-10.jpg" alt="Inside a client dialysis center built by OmniCare" loading="lazy" onerror="this.parentNode.classList.add('missing')"><div class="ph-hint"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 8z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>omnicare-photos/tape-10.jpg</span></div></div></div><div class="tape-item"><div class="ph"><img src="omnicare-photos/tape-11.jpg" alt="Inside a client dialysis center built by OmniCare" loading="lazy" onerror="this.parentNode.classList.add('missing')"><div class="ph-hint"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-2.5h6L17 8h3a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 20 20H4a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 4 8z"/><circle cx="12" cy="13.5" r="3.5"/></svg><span>omnicare-photos/tape-11.jpg</span></div></div></div></div>
+    </div>
+  </div>
 </section>
 
 <section id="contact">
@@ -676,10 +763,15 @@
 </footer>
 
 <script>
-  // Scroll reveal
+  // Scroll reveal with soft stagger: siblings revealed in the same frame fade in sequence
   const io = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, { threshold: 0.12 });
+    const batch = entries.filter(e => e.isIntersecting);
+    batch.forEach((e, i) => {
+      e.target.style.setProperty('--stagger', (i * 0.12) + 's');
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
   // Animated stat counters
@@ -718,6 +810,7 @@ document.getElementById('leadForm').addEventListener('submit', function(e){
     (f.get('message') ? 'Message:' + nl + f.get('message') + nl + nl : '') +
     'Sent from omnicareph.com';
   var subject = 'Dialysis Center Inquiry - ' + f.get('name');
+  if (window.gtag) gtag('event', 'generate_lead', { interested_in: f.get('package') });
   window.location.href = 'mailto:info@omnicareph.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
 });
 </script>
