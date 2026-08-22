@@ -322,10 +322,25 @@
   }
   .tape::before{left:0;background:linear-gradient(90deg,rgba(255,255,255,.55) 0%,transparent 100%)}
   .tape::after{right:0;background:linear-gradient(270deg,rgba(255,255,255,.55) 0%,transparent 100%)}
-  .tape-track{display:flex;width:max-content;animation:tape-roll 110s linear infinite}
-  .tape:hover .tape-track{animation-play-state:paused}
-  @media (prefers-reduced-motion: reduce){.tape-track{animation:none}}
+  .tape-track{display:flex;width:max-content}
   @keyframes tape-roll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .tape-nav{
+    position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:3;
+    display:flex;gap:6px;align-items:center;padding:10px 14px;border-radius:999px;
+    background:rgba(10,36,86,.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    box-shadow:0 4px 18px rgba(0,0,0,.18);
+  }
+  .tape-nav button{
+    width:22px;height:5px;border:0;padding:0;border-radius:3px;cursor:pointer;
+    background:rgba(255,255,255,.42);position:relative;overflow:hidden;
+    transition:width .35s ease, background .3s;
+  }
+  .tape-nav button:hover{background:rgba(255,255,255,.75)}
+  .tape-nav button.active{width:46px;background:rgba(255,255,255,.35)}
+  .tape-nav button.active::after{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:var(--p,0%);
+    background:var(--gold);border-radius:3px;
+  }
   .tape-item{flex-shrink:0;margin-right:0;position:relative}
   .tape-item .ph{
     aspect-ratio:16/11;height:min(78vh,760px);width:auto;
@@ -424,6 +439,9 @@
     .inquiry-card{grid-template-columns:1fr;padding:30px 22px}
     .f-grid{grid-template-columns:1fr}
     .tape-item .ph{height:48vh}
+    .tape-nav{gap:4px;padding:8px 10px;bottom:14px}
+    .tape-nav button{width:11px;height:4px}
+    .tape-nav button.active{width:26px}
     .contact-card{grid-template-columns:1fr;padding:40px 28px}
     section{padding:72px 20px}
   }
@@ -813,6 +831,66 @@ document.getElementById('leadForm').addEventListener('submit', function(e){
   if (window.gtag) gtag('event', 'generate_lead', { interested_in: f.get('package') });
   window.location.href = 'mailto:info@omnicareph.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
 });
+</script>
+<script>
+(function(){
+  var tape = document.querySelector('.tape'), track = document.querySelector('.tape-track');
+  if (!tape || !track) return;
+  if (!track.animate) { track.style.animation = 'tape-roll 110s linear infinite'; return; }
+  var items = track.querySelectorAll('.tape-item'), N = items.length / 2, DUR = 110000;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var anim = track.animate([{transform:'translateX(0)'},{transform:'translateX(-50%)'}], {duration: DUR, iterations: Infinity});
+  if (reduce) anim.pause();
+
+  var nav = document.createElement('div'); nav.className = 'tape-nav'; nav.setAttribute('aria-label', 'Photo navigation');
+  var btns = [];
+  for (var i = 0; i < N; i++) {
+    var b = document.createElement('button'); b.type = 'button';
+    b.setAttribute('aria-label', 'Photo ' + (i + 1) + ' of ' + N); b.dataset.i = i;
+    nav.appendChild(b); btns.push(b);
+  }
+  tape.appendChild(nav);
+
+  function half(){ return track.scrollWidth / 2; }
+  function itemW(){ return items[0].offsetWidth; }
+  function now(){ return ((anim.currentTime % DUR) + DUR) % DUR; }
+  function timeFor(i){
+    var w = itemW(), h = half();
+    var x = i * w + w / 2 - tape.clientWidth / 2;
+    x = ((x % h) + h) % h;
+    return x / h * DUR;
+  }
+  var hover = false, tween = null;
+  function jump(i){
+    var target = timeFor(i), cur = now(), d = target - cur;
+    if (d > DUR / 2) d -= DUR; if (d < -DUR / 2) d += DUR;
+    var t0 = performance.now(), len = 750;
+    anim.pause(); if (tween) cancelAnimationFrame(tween);
+    (function step(t){
+      var p = Math.min((t - t0) / len, 1), e = 1 - Math.pow(1 - p, 3);
+      anim.currentTime = (((cur + d * e) % DUR) + DUR) % DUR;
+      if (p < 1) tween = requestAnimationFrame(step);
+      else { tween = null; if (!reduce && !hover) anim.play(); }
+    })(t0);
+  }
+  tape.addEventListener('mouseenter', function(){ hover = true; anim.pause(); });
+  tape.addEventListener('mouseleave', function(){ hover = false; if (!reduce && !tween) anim.play(); });
+  nav.addEventListener('click', function(e){ var b = e.target.closest('button'); if (b) jump(+b.dataset.i); });
+
+  (function tick(){
+    var h = half(), w = itemW();
+    if (h && w) {
+      var x = now() / DUR * h + tape.clientWidth / 2;
+      var idx = Math.floor(x / w) % N, frac = (x / w) % 1;
+      for (var j = 0; j < N; j++) {
+        var on = j === idx;
+        if (btns[j].classList.contains('active') !== on) btns[j].classList.toggle('active', on);
+        if (on) btns[j].style.setProperty('--p', (frac * 100).toFixed(1) + '%');
+      }
+    }
+    requestAnimationFrame(tick);
+  })();
+})();
 </script>
 </body>
 </html>
