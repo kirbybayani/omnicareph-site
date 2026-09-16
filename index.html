@@ -716,7 +716,7 @@ if (location.hostname === 'omnicareph.com' || location.hostname === 'www.omnicar
       <form id="leadForm">
         <div class="f-grid">
           <label>Full Name<input type="text" name="name" required placeholder="Juan Dela Cruz"></label>
-          <label>Email or Mobile<input type="text" name="contact" required placeholder="you@email.com or 0917 000 0000"></label>
+          <label>Mobile Number<input type="tel" name="contact" required minlength="11" maxlength="13" inputmode="tel" pattern="(09[0-9]{9}|\+639[0-9]{9})" title="Enter a valid mobile number: 09XXXXXXXXX or +639XXXXXXXXX" placeholder="09170000000"></label>
           <label>Planned Location<input type="text" name="location" placeholder="City / Province"></label>
           <label>I am a/an
             <select name="role">
@@ -814,13 +814,19 @@ if (location.hostname === 'omnicareph.com' || location.hostname === 'www.omnicar
 </script>
 
 <script>
+var leadMobile = document.querySelector('#leadForm input[name="contact"]');
+leadMobile.addEventListener('input', function(){
+  var v = this.value.replace(/[^\d+]/g, '');
+  v = v.charAt(0) === '+' ? '+' + v.slice(1).replace(/\+/g, '') : v.replace(/\+/g, '');
+  this.value = v.slice(0, 13);
+});
 document.getElementById('leadForm').addEventListener('submit', function(e){
   e.preventDefault();
   var f = new FormData(this), nl = '\r\n';
   var body = 'Hello OmniCare,' + nl + nl +
     'I would like to inquire about setting up a dialysis center.' + nl + nl +
     'Name: ' + f.get('name') + nl +
-    'Contact: ' + f.get('contact') + nl +
+    'Mobile: ' + f.get('contact') + nl +
     'Planned location: ' + (f.get('location') || 'Not specified') + nl +
     'I am a/an: ' + f.get('role') + nl +
     'Interested in: ' + f.get('package') + nl +
