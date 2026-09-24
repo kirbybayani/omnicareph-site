@@ -820,8 +820,20 @@ leadMobile.addEventListener('input', function(){
   v = v.charAt(0) === '+' ? '+' + v.slice(1).replace(/\+/g, '') : v.replace(/\+/g, '');
   this.value = v.slice(0, 13);
 });
+// Inquiries also land in OmniCare's CRM (CrewLogix Business Suite) as leads. Paste the inbound address
+// from CRM > Meetings > Website inquiries; leave it empty and the form falls back to e-mail only.
+var CRM_INBOUND_URL = '';
+function sendToCrm(f) {
+  if (!CRM_INBOUND_URL || !window.fetch) return Promise.reject(new Error('no crm'));
+  var ac = window.AbortController ? new AbortController() : null; if (ac) setTimeout(function(){ ac.abort(); }, 6000);
+  return fetch(CRM_INBOUND_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: ac ? ac.signal : undefined,
+    body: JSON.stringify({ name: f.get('name'), phone: f.get('contact'), message: f.get('message') || '', product: f.get('package') || '', page: location.href, website: '',
+      extra: { 'Planned location': f.get('location') || '', 'Inquirer is': f.get('role') || '', 'Target timeline': f.get('timeline') || '' } }) })
+    .then(function(r){ if (!r.ok) throw new Error('crm ' + r.status); return r.json(); });
+}
 document.getElementById('leadForm').addEventListener('submit', function(e){
   e.preventDefault();
+  var form = this, btn = form.querySelector('button[type=submit]');
   var f = new FormData(this), nl = '\r\n';
   var body = 'Hello OmniCare,' + nl + nl +
     'I would like to inquire about setting up a dialysis center.' + nl + nl +
@@ -835,7 +847,15 @@ document.getElementById('leadForm').addEventListener('submit', function(e){
     'Sent from omnicareph.com';
   var subject = 'Dialysis Center Inquiry - ' + f.get('name');
   if (window.gtag) gtag('event', 'generate_lead', { interested_in: f.get('package') });
-  window.location.href = 'mailto:info@omnicareph.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  var mailto = 'mailto:info@omnicareph.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
+  sendToCrm(f).then(function(){
+    // recorded in the CRM: thank the visitor here instead of opening their mail app
+    form.innerHTML = '<div style="padding:18px 6px;font-size:1.05rem"><b>Thank you, ' + String(f.get('name') || '').replace(/[<>&]/g, '') + '.</b><br>We received your inquiry and will call you on ' + String(f.get('contact') || '').replace(/[<>&]/g, '') + ' within one working day.<br><span style="opacity:.75;font-size:.9rem">You may also write to info@omnicareph.com.</span></div>';
+  }).catch(function(){
+    if (btn) { btn.disabled = false; btn.textContent = 'Send Inquiry'; }
+    window.location.href = mailto;
+  });
 });
 </script>
 <script>
