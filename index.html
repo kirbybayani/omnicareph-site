@@ -822,7 +822,7 @@ leadMobile.addEventListener('input', function(){
 });
 // Inquiries also land in OmniCare's CRM (CrewLogix Business Suite) as leads. Paste the inbound address
 // from CRM > Meetings > Website inquiries; leave it empty and the form falls back to e-mail only.
-var CRM_INBOUND_URL = '';
+var CRM_INBOUND_URL = 'https://books.crewlogix.cloud/api/public/leads/92dcd156650aed9f26b5ab46bcaeb86a58f9d8a7dc56d7aa';
 function sendToCrm(f) {
   if (!CRM_INBOUND_URL || !window.fetch) return Promise.reject(new Error('no crm'));
   var ac = window.AbortController ? new AbortController() : null; if (ac) setTimeout(function(){ ac.abort(); }, 6000);
