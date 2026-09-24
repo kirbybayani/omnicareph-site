@@ -849,9 +849,11 @@ document.getElementById('leadForm').addEventListener('submit', function(e){
   if (window.gtag) gtag('event', 'generate_lead', { interested_in: f.get('package') });
   var mailto = 'mailto:info@omnicareph.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
   if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
-  sendToCrm(f).then(function(){
-    // recorded in the CRM: thank the visitor here instead of opening their mail app
-    form.innerHTML = '<div style="padding:18px 6px;font-size:1.05rem"><b>Thank you, ' + String(f.get('name') || '').replace(/[<>&]/g, '') + '.</b><br>We received your inquiry and will call you on ' + String(f.get('contact') || '').replace(/[<>&]/g, '') + ' within one working day.<br><span style="opacity:.75;font-size:.9rem">You may also write to info@omnicareph.com.</span></div>';
+  sendToCrm(f).then(function(j){
+    // recorded in the CRM: thank the visitor here instead of opening their mail app, and let them book a call at once
+    var clean = function(v){ return String(v || '').replace(/[<>&]/g, ''); };
+    var book = (j && j.bookingUrl && /^https:\/\//.test(j.bookingUrl)) ? '<br><a class="btn btn-primary" style="display:inline-block;margin-top:14px" target="_blank" rel="noopener" href="' + clean(j.bookingUrl).replace(/"/g, '') + '">Schedule a call now</a><br><span style="opacity:.75;font-size:.9rem">Pick a time that suits you; the meeting details follow by e-mail.</span>' : '';
+    form.innerHTML = '<div style="padding:18px 6px;font-size:1.05rem"><b>Thank you, ' + clean(f.get('name')) + '.</b><br>We received your inquiry and will call you on ' + clean(f.get('contact')) + ' within one working day.' + book + '<br><span style="opacity:.75;font-size:.9rem">You may also write to info@omnicareph.com.</span></div>';
   }).catch(function(){
     if (btn) { btn.disabled = false; btn.textContent = 'Send Inquiry'; }
     window.location.href = mailto;
