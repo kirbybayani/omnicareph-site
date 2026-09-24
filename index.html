@@ -716,6 +716,7 @@ if (location.hostname === 'omnicareph.com' || location.hostname === 'www.omnicar
         <div class="f-grid">
           <label>Full Name<input type="text" name="name" required placeholder="Juan Dela Cruz"></label>
           <label>Mobile Number<input type="tel" name="contact" required minlength="11" maxlength="13" inputmode="tel" pattern="(09[0-9]{9}|\+639[0-9]{9})" title="Enter a valid mobile number: 09XXXXXXXXX or +639XXXXXXXXX" placeholder="09170000000"></label>
+          <label>Email Address<input type="email" name="email" required maxlength="254" pattern="[^@\s]+@[^@\s]+\.[A-Za-z]{2,}" title="Enter a valid email address (name@example.com)" placeholder="you@email.com"></label>
           <label>Planned Location<input type="text" name="location" placeholder="City / Province"></label>
           <label>I am a/an
             <select name="role">
@@ -825,8 +826,8 @@ function sendToCrm(f) {
   if (!CRM_INBOUND_URL || !window.fetch) return Promise.reject(new Error('no crm'));
   var ac = window.AbortController ? new AbortController() : null; if (ac) setTimeout(function(){ ac.abort(); }, 6000);
   return fetch(CRM_INBOUND_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: ac ? ac.signal : undefined,
-    body: JSON.stringify({ name: f.get('name'), phone: f.get('contact'), message: f.get('message') || '', product: f.get('package') || '', page: location.href, website: '',
-      extra: { 'Planned location': f.get('location') || '', 'Inquirer is': f.get('role') || '', 'Target timeline': f.get('timeline') || '' } }) })
+    body: JSON.stringify({ name: f.get('name'), phone: f.get('contact'), email: f.get('email') || '', message: f.get('message') || '', product: f.get('package') || '', page: location.href, website: '',
+      extra: { 'Email': f.get('email') || '', 'Planned location': f.get('location') || '', 'Inquirer is': f.get('role') || '', 'Target timeline': f.get('timeline') || '' } }) })
     .then(function(r){ if (!r.ok) throw new Error('crm ' + r.status); return r.json(); });
 }
 document.getElementById('leadForm').addEventListener('submit', function(e){
@@ -837,6 +838,7 @@ document.getElementById('leadForm').addEventListener('submit', function(e){
     'I would like to inquire about setting up a dialysis center.' + nl + nl +
     'Name: ' + f.get('name') + nl +
     'Mobile: ' + f.get('contact') + nl +
+    'Email: ' + f.get('email') + nl +
     'Planned location: ' + (f.get('location') || 'Not specified') + nl +
     'I am a/an: ' + f.get('role') + nl +
     'Interested in: ' + f.get('package') + nl +
